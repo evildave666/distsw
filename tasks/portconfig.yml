@@ -1,0 +1,22 @@
+--- 
+- name: Add distribution switch peerlink
+  nclu:
+    commands:
+      - add bond peerlink bond slaves {{ peerlinkports }}
+      - add int peerlink.{{ peerlinkvlan }} ip address {{ peerlinkipaddr }}
+      - add int peerlink.{{ peerlinkvlan }} clag backup-ip {{ partneroobaddr }} vrf mgmt
+      - add int peerlink.{{ peerlinkvlan }} clag enable yes
+      - add int peerlink.{{ peerlinkvlan }} clag peer-ip {{ partneribaddr }}
+      - add int peerlink.{{ peerlinkvlan }} clag sys-mac {{ peerlinkmac }}
+#- name: Add distribution switch downlinks
+#  nclu:
+#    commands:
+#      - add bond downlink bond slaves {{ uplinkports }}
+#      - add bond downlink clag id {{ uplinkclag }}
+- name: Add distribution switch bridge
+  nclu:
+    commands:
+      - add bridge bridge ports peerlink,downlink1-2
+      - add bridge bridge pvid 1
+      - add bridge bridge vids 201-245,251-295
+      - add bridge bridge vlan-aware
